@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var userModel = require('../models/User.js')
+var userModel = require("../models/User.js");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -26,32 +26,60 @@ router.get("/add", function (req, res, next) {
 });
 
 router.post("/add", function (req, res, next) {
-  var bodydata = {
-    uname: req.body.name,
-    uprice: req.body.price,
-    udetails: req.body.details,
-  };
-  var mydata = userModel(bodydata);
-  mydata.save();
-  res.send("Recored Aedd!");
+  // console.log(req.body);
+  console.log(req.files.file123);
+  var fileobject = req.files.file123;
+  fileobject.mv("public/upload/" + fileobject.name, function (err) {
+    var bodydata = {
+      uname: req.body.name,
+      uprice: req.body.price,
+      udetails: req.body.details,
+      imageurl: fileobject.name,
+    };
+    var mydata = userModel(bodydata);
+    mydata
+      .save()
+      .then(() => res.redirect("/show"))
+      .catch(() => res.send("Erro"));
+
+    // res.send("Recored Added!");
+  });
+});
+
+router.get("/showproductAPI", function (req, res) {
+  userModel.find().then((data) => {
+    res.json(data);
+  });
 });
 
 router.get("/show", function (req, res, next) {
-  userModel.find()
-  .then(data =>{
-    console.log(data)
-    res.render("show",{mydata:data});
-  })
-  .catch(err=>console.log("Error" +err))
+  userModel
+    .find()
+    .then((data) => {
+      console.log(data);
+      // res.render(data)
+      // res.send(data)
+      res.render("show", { mydata: data });
+    })
+    .catch((err) => console.log("Error" + err));
 });
 
+router.get("/delete/:id", function (req, res, next) {
+  // var myid = req.params.id;
+  userModel
+    .findByIdAndDelete(req.params.id)
+    .then(() => {
+      res.redirect("/show");
+    })
+    .catch((err) => res.send(err));
+});
 
 router.get("/about", function (req, res, next) {
   res.render("about");
 });
 
-router.get("/contact",function(req,res){
-  res.render("contact")
-})
+router.get("/contact", function (req, res) {
+  res.render("contact");
+});
 
 module.exports = router;

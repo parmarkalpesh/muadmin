@@ -5,6 +5,7 @@ const userSchema = new Schema({
   uname:String,
   uprice:Number,
   udetails:String,
+  imageurl:String,
 
 })
 

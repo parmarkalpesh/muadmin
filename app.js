@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var fileupload = require('express-fileupload')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -12,6 +13,7 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/mydb')
 .then(()=>{
   console.log("Connected To Database")
+  console.log("http://127.0.0.1:3000")
 })
 .catch(err=>{
   console.log("Not able to connect")
@@ -28,6 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileupload())
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

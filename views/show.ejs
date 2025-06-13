@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Show Data</title>
 </head>
 <body>
     
@@ -17,13 +17,18 @@
             <th>Name</th>
             <th>Price</th>
             <th>Details</th>
+            <th>Image</th>
+            <th>Action</th>
         </tr>
         <% for(var i=0;i<mydata.length;i++){ %>
             <tr>
                 <td><%= i+1 %></td>
                 <td><%= mydata[i].uname %></td>
-<td><%= mydata[i].uprice %></td>
-<td><%= mydata[i].udetails %></td>
+                <td><%= mydata[i].uprice %></td>
+                <td><%= mydata[i].udetails %></td>
+                <td><img width="100px" src='/upload/<%- mydata[i].imageurl %>'></td>
+                <td><a href="/show/<%= mydata[i]._id %>">Show</a></td>
+                <td><a href="/delete/<%= mydata[i]._id %>" onclick="return confirm('Are You Sure Delete?')" >Delete</a></td>
 </tr>
 <% } %>
 </table>

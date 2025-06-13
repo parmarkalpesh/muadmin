@@ -10,10 +10,11 @@
     <h1>Data Insert into Database</h1>
     <%- include('menu')%><br>
 
-    <form method="post" action="/add">
+    <form method="post" action="/add" enctype="multipart/form-data">
         Product Name :<input type="text" name="name"/><br><br>
         Product Price :<input type="price" name="price"/><br><br>
         Product Details :<input type="details" name="details"/><br><br>
+        File Upload: <input type="file"  name="file123" required/>
         <button type="submit">Submit</button>
     </form>
 </body>
