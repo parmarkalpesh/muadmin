@@ -56,7 +56,7 @@ router.get("/show", function (req, res, next) {
   userModel
     .find()
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       // res.render(data)
       // res.send(data)
       res.render("show", { mydata: data });
