@@ -1,36 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html>
+  <head>
     <title>Show Data</title>
-</head>
-<body>
-    
-    <h1>Data Fateched From Database</h1>
-    <%- include('menu')%><br>
-
-    <%= mydata.length %> Records Found
-    <table border="1">
+  </head>
+  <body>
+    <h1>All Products</h1>
+    <table border="1" cellpadding="8">
+      <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Details</th>
+        <th>Image</th>
+      </tr>
+      <% mydata.forEach(item => { %>
         <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Details</th>
-            <th>Image</th>
-            <th>Action</th>
+          <td><%= item.uname %></td>
+          <td><%= item.uprice %></td>
+          <td><%= item.udetails %></td>
+          <td>
+            <img src="/upload/<%= item.imageurl %>" width="100">
+          </td>
         </tr>
-        <% for(var i=0;i<mydata.length;i++){ %>
-            <tr>
-                <td><%= i+1 %></td>
-                <td><%= mydata[i].uname %></td>
-                <td><%= mydata[i].uprice %></td>
-                <td><%= mydata[i].udetails %></td>
-                <td><img width="100px" src='/upload/<%- mydata[i].imageurl %>'></td>
-                <td><a href="/show/<%= mydata[i]._id %>">Show</a></td>
-                <td><a href="/delete/<%= mydata[i]._id %>" onclick="return confirm('Are You Sure Delete?')" >Delete</a></td>
-</tr>
-<% } %>
-</table>
-</body>
+      <% }); %>
+    </table>
+  </body>
 </html>
