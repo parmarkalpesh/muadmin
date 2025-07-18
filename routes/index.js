@@ -84,6 +84,7 @@ router.get("/show", (req, res) => {
     });
 });
 
+
 // ✅ Delete product
 router.get("/delete/:id", (req, res) => {
   userModel
