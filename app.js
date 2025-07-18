@@ -1,54 +1,69 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var fileupload = require('express-fileupload');
-require('dotenv').config(); 
+// ✅ Core dependencies
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const fileUpload = require('express-fileupload');
+require('dotenv').config();
 
+// ✅ MongoDB Connection
+const mongoose = require('mongoose');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// ✅ Routes
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
-// ✅ MongoDB Atlas Connection using Mongoose
-var mongoose = require('mongoose');
-
-// Replace with your MongoDB Atlas connection string
-mongoose.connect(process.env.ATLAS_URL)
+// ✅ Connect to MongoDB Atlas
+mongoose.connect(process.env.ATLAS_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
 .then(() => {
   console.log("✅ Connected To MongoDB Atlas");
   console.log("🌐 Visit: http://127.0.0.1:3000");
 })
 .catch(err => {
-  console.log("❌ Not able to connect to MongoDB Atlas:", err.message);
+  console.error("❌ MongoDB connection error:", err.message);
 });
 
-var app = express();
+// ✅ Initialize Express app
+const app = express();
 
-// view engine setup
+// ✅ View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(fileupload());
+// ✅ Middlewares
+app.use(logger('dev')); // HTTP request logger
+app.use(express.json()); // Parse JSON bodies
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(cookieParser()); // Parse cookies
+app.use(express.static(path.join(__dirname, 'public'))); // Public folder for static files
 
+// ✅ File upload middleware
+app.use(fileUpload({
+  createParentPath: true, // automatically create upload folder if not exists
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB file size limit (adjust as needed)
+  abortOnLimit: true,
+}));
+
+// ✅ Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
+// ✅ Catch 404 and forward to error handler
+app.use((req, res, next) => {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
+// ✅ Error handler
+app.use((err, req, res, next) => {
   res.locals.message = err.message;
+  // Show detailed errors only in development
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  // Render error page
   res.status(err.status || 500);
   res.render('error');
 });
